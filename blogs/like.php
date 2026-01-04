@@ -12,23 +12,35 @@ if (!isset($data['id'])) {
 }
 
 $blogId = $data['id'];
+$action = isset($data['action']) ? $data['action'] : 'like'; // default to like
 
 try {
-    // Increment likes_count
-    $sql = "UPDATE blogs SET likes_count = likes_count + 1 WHERE id = :id";
+    if ($action === 'unlike') {
+        // Decrement likes_count but prevent it from going below 0
+        $sql = "UPDATE blogs SET likes_count = CASE WHEN likes_count > 0 THEN likes_count - 1 ELSE 0 END WHERE id = :id";
+    } else {
+        // Increment likes_count
+        $sql = "UPDATE blogs SET likes_count = likes_count + 1 WHERE id = :id";
+    }
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $blogId]);
 
-    if ($stmt->rowCount() > 0) {
+    if ($stmt->rowCount() > 0 || $action === 'unlike') { // rowCount might be 0 if unlike called on 0 likes
         // Fetch new count
         $stmt = $pdo->prepare("SELECT likes_count FROM blogs WHERE id = :id");
         $stmt->execute([':id' => $blogId]);
         $result = $stmt->fetch();
         
-        sendResponse([
-            'success' => true,
-            'likes_count' => $result['likes_count']
-        ]);
+        if ($result) {
+            sendResponse([
+                'success' => true,
+                'likes_count' => $result['likes_count'],
+                'action' => $action
+            ]);
+        } else {
+             sendError('Blog not found');
+        }
     } else {
         sendError('Blog not found');
     }
