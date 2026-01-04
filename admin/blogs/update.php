@@ -10,7 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $admin = validateToken();
 $input = json_decode(file_get_contents('php://input'), true);
 
-validateInput($input, ['id', 'title', 'slug', 'excerpt', 'content', 'author']);
+// Hardcode author
+$input['author'] = "Pandit Kirtan Prasad Supkar";
+
+validateInput($input, ['id', 'title', 'slug', 'excerpt', 'content']);
 
 try {
     // Update featured_image and is_featured if provided

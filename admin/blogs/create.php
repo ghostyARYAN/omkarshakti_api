@@ -10,11 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $admin = validateToken();
 $input = json_decode(file_get_contents('php://input'), true);
 
-validateInput($input, ['title', 'slug', 'excerpt', 'content', 'author']);
+// Hardcode author
+$input['author'] = "Pandit Kirtan Prasad Supkar";
+
+validateInput($input, ['title', 'slug', 'excerpt', 'content']);
 
 try {
     // featured_image and is_featured are optional
-    validateInput($input, ['title', 'slug', 'excerpt', 'content', 'author']);
+    // validateInput($input, ['title', 'slug', 'excerpt', 'content']); // Duplicate validation removed
 
     $stmt = $pdo->prepare("
         INSERT INTO blogs (title, slug, excerpt, content, author, featured_image, is_published, is_featured) 
