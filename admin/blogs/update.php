@@ -11,7 +11,7 @@ $admin = validateToken();
 $input = json_decode(file_get_contents('php://input'), true);
 
 // Hardcode author
-$input['author'] = "Pandit Kirtan Prasad Supkar";
+$input['author'] = "Aacharya Kirtan Prasad Supkar";
 
 validateInput($input, ['id', 'title', 'slug', 'excerpt', 'content']);
 
