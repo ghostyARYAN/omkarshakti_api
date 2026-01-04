@@ -13,12 +13,12 @@ validateInput($input, ['service_id', 'full_name', 'email', 'phone', 'date', 'tim
 
 try {
     // Check if the slot is available
-    $stmt = $pdo->prepare("SELECT id FROM appointment_slots WHERE date = ? AND time_slot = ? AND is_available = 1");
-    $stmt->execute([$input['date'], $input['time_slot']]);
+    // $stmt = $pdo->prepare("SELECT id FROM appointment_slots WHERE date = ? AND time_slot = ? AND is_available = 1");
+    // $stmt->execute([$input['date'], $input['time_slot']]);
     
-    if (!$stmt->fetch()) {
-        sendError('Selected time slot is not available');
-    }
+    // if (!$stmt->fetch()) {
+    //     sendError('Selected time slot is not available');
+    // }
     
     // Check if service exists
     $stmt = $pdo->prepare("SELECT title FROM services WHERE id = ? AND is_active = 1");
@@ -48,8 +48,8 @@ try {
     $appointment_id = $pdo->lastInsertId();
     
     // Mark the slot as unavailable
-    $stmt = $pdo->prepare("UPDATE appointment_slots SET is_available = 0 WHERE date = ? AND time_slot = ?");
-    $stmt->execute([$input['date'], $input['time_slot']]);
+    // $stmt = $pdo->prepare("UPDATE appointment_slots SET is_available = 0 WHERE date = ? AND time_slot = ?");
+    // $stmt->execute([$input['date'], $input['time_slot']]);
     
     // Send notification email
     $emailData = array_merge($input, ['service_title' => $service['title']]);
